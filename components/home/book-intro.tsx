@@ -1,143 +1,221 @@
 "use client";
 
-import { useRef } from "react";
+import { BookCard } from "@/components/ui/book-card";
+import { Button } from "@/components/ui/button";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Button } from "@/components/ui/button";
-import { BookCard } from "@/components/ui/book-card";
+import { ArrowRight } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import { useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const motionEase = [0.22, 1, 0.36, 1] as const;
+
+const bookMeta = [
+  { label: "Genre", value: "Romantic Thriller" },
+  { label: "Theme", value: "AI & Humanity" },
+  { label: "Status", value: "Bestseller" },
+];
+
 export function BookIntro() {
   const sectionRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   useGSAP(
     () => {
       if (!sectionRef.current) return;
 
-      // Animate the book entering
-      gsap.from(".intro-book", {
-        x: 100,
-        opacity: 0,
-        rotationY: 25,
-        duration: 1.5,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: ".intro-book-container",
-          start: "top 75%",
-        },
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.to(".intro-book-float", {
+          y: -18,
+          rotationZ: -1.25,
+          duration: 5.5,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        });
+
+        gsap.to(".intro-book-halo", {
+          scale: 1.08,
+          opacity: 0.72,
+          duration: 4.8,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        });
+
+        gsap.to(".intro-ambient-line", {
+          xPercent: 12,
+          opacity: 0.64,
+          duration: 6,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+          stagger: 0.7,
+        });
+
+        gsap.to(".intro-grid-field", {
+          yPercent: -7,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+
+        gsap.to(".intro-book-stage", {
+          yPercent: -5,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.8,
+          },
+        });
       });
 
-      // Background shapes floating
-      gsap.to(".intro-shape", {
-        y: -50,
-        x: 30,
-        rotation: 20,
-        duration: 6,
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-        stagger: 1,
-      });
-
+      return () => mm.revert();
     },
-    { scope: sectionRef }
+    { scope: sectionRef },
   );
 
-  return (
-    <section 
-      id="story"
-      ref={sectionRef} 
-      className="relative bg-secondary-950 py-32 px-6 overflow-hidden rounded-t-[3rem] -mt-12 z-20 shadow-[0_-20px_60px_rgba(0,0,0,0.5)] border-t border-white/5"
-    >
-      {/* Thematic Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-primary-500/20 to-transparent opacity-30 mix-blend-screen pointer-events-none" />
-      <div className="intro-shape absolute top-[20%] left-[-5%] w-[40vw] h-[40vw] bg-primary-500/5 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
-      <div className="intro-shape absolute bottom-[10%] right-[-10%] w-[50vw] h-[50vw] bg-secondary-500/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
+  const reveal = (delay = 0) => ({
+    initial: shouldReduceMotion ? false : { opacity: 0, y: 32 },
+    whileInView: shouldReduceMotion ? undefined : { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.35 },
+    transition: { duration: 0.72, delay, ease: motionEase },
+  });
 
-      <div className="container mx-auto max-w-7xl relative z-10">
-        
-        {/* Editorial Header */}
-        <div className="mb-16 md:mb-24 flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/10 pb-8 gap-6">
-          <SectionHeading 
-            title="A Collision of Logic and Emotion." 
-            subtitle="01 // The Premise"
-            className="text-white mb-0"
-          />
-          <div className="text-secondary-400 text-sm tracking-[0.3em] uppercase font-bold bg-white/5 py-2 px-6 rounded-full border border-white/10 shrink-0">
+  return (
+    <section
+      id="story"
+      ref={sectionRef}
+      className="relative z-20 -mt-12 overflow-hidden rounded-t-[3rem] border-t border-white/5 bg-secondary-950 px-4 py-28 shadow-[0_-28px_80px_rgba(0,0,0,0.42)] sm:px-6 sm:py-32 lg:px-8 lg:py-40"
+    >
+      <div className="intro-grid-field pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.026)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-size-[64px_64px] opacity-55 mix-blend-overlay" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-52 bg-linear-to-b from-primary-500/18 via-secondary-950/40 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-linear-to-t from-secondary-950 via-secondary-950/80 to-transparent" />
+      <div className="pointer-events-none absolute left-1/2 top-[9%] z-0 -translate-x-1/2 select-none font-heading text-[18vw] font-black leading-none tracking-wide text-white/2.5">
+        STORY
+      </div>
+      <div className="intro-ambient-line pointer-events-none absolute left-0 top-1/3 h-px w-1/2 bg-linear-to-r from-transparent via-primary-400/45 to-transparent" />
+      <div className="intro-ambient-line pointer-events-none absolute right-0 top-2/3 h-px w-1/2 bg-linear-to-l from-transparent via-secondary-300/30 to-transparent" />
+
+      <div className="relative z-10 mx-auto w-full max-w-7xl">
+        <motion.div
+          {...reveal()}
+          className="mb-14 flex flex-col items-start justify-between gap-6 border-b border-white/10 pb-8 sm:mb-20 md:flex-row md:items-end lg:mb-24"
+        >
+          <div>
+            <p className="mb-4 text-xs font-black uppercase tracking-[0.32em] text-primary-400 sm:text-sm">
+              01 // The Premise
+            </p>
+            <h2 className="max-w-4xl font-heading text-4xl font-black leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-6xl">
+              A Collision of Logic and Emotion.
+            </h2>
+          </div>
+
+          <div className="shrink-0 rounded-full border border-white/10 bg-white/6 px-5 py-2 text-xs font-black uppercase tracking-[0.24em] text-secondary-200 backdrop-blur-md">
             Featured Work
           </div>
-        </div>
+        </motion.div>
 
-        {/* 12-Column Premium Editorial Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
-          {/* Left Content Area (7 columns) */}
-          <div className="lg:col-span-7 flex flex-col gap-10">
-            <h3 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black text-secondary-50 leading-[1.1] tracking-tight">
-              Where does code end and <br />
-              <span className="text-primary-500 italic font-medium">consciousness</span> begin?
-            </h3>
-            
-            <div className="h-px w-24 bg-primary-500/50" />
-            
-            <p className="text-lg md:text-2xl text-secondary-300 leading-relaxed font-light">
-              Dive into a provocative narrative that questions the very nature of human connection. When an artificial mind develops genuine emotion, it forces humanity to look in the mirror. Are we just biological algorithms, or is there a soul in the machine?
-            </p>
-            
-            {/* Metadata / Stats Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 pt-6">
-              <div>
-                <h4 className="text-secondary-500 text-xs font-bold uppercase tracking-widest mb-2">Genre</h4>
-                <p className="text-white font-medium text-lg">Romantic Thriller</p>
-              </div>
-              <div>
-                <h4 className="text-secondary-500 text-xs font-bold uppercase tracking-widest mb-2">Theme</h4>
-                <p className="text-white font-medium text-lg">AI & Humanity</p>
-              </div>
-              <div>
-                <h4 className="text-secondary-500 text-xs font-bold uppercase tracking-widest mb-2">Status</h4>
-                <p className="text-primary-400 font-medium text-lg">Bestseller</p>
-              </div>
-            </div>
-            
-            <div className="pt-8">
-              <Button 
-                href="/about-book" 
-                variant="outline" 
-                tone="soft" 
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-20">
+          <div className="flex flex-col gap-8 lg:col-span-7">
+            <motion.div {...reveal(0.08)}>
+              <h3 className="max-w-3xl font-heading text-4xl font-black leading-[1.06] tracking-tight text-secondary-50 sm:text-5xl lg:text-6xl">
+                Where does code end and{" "}
+                <span className="font-medium italic text-primary-400">
+                  consciousness
+                </span>{" "}
+                begin?
+              </h3>
+            </motion.div>
+
+            <motion.div
+              {...reveal(0.14)}
+              className="h-px w-24 bg-primary-400/60"
+            />
+
+            <motion.p
+              {...reveal(0.18)}
+              className="max-w-3xl text-lg font-light leading-relaxed text-secondary-200 sm:text-xl lg:text-2xl"
+            >
+              Dive into a provocative narrative that questions the very nature
+              of human connection. When an artificial mind develops genuine
+              emotion, it forces humanity to look in the mirror. Are we just
+              biological algorithms, or is there a soul in the machine?
+            </motion.p>
+
+            <motion.div
+              {...reveal(0.22)}
+              className="grid max-w-3xl grid-cols-1 overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-3"
+            >
+              {bookMeta.map((item) => (
+                <div
+                  key={item.label}
+                  className="border-b border-white/10 bg-secondary-950/70 p-5 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
+                >
+                  <h4 className="mb-2 text-[10px] font-black uppercase tracking-[0.24em] text-secondary-400">
+                    {item.label}
+                  </h4>
+                  <p className="text-base font-semibold text-white sm:text-lg">
+                    {item.value}
+                  </p>
+                </div>
+              ))}
+            </motion.div>
+
+            <motion.div
+              {...reveal(0.26)}
+              className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center"
+            >
+              <Button
+                href="/about-book"
+                variant="outline"
+                tone="soft"
                 size="lg"
-                className="border-secondary-700 text-secondary-300 w-full sm:w-auto shadow-xl"
+                icon={<ArrowRight size={18} />}
+                iconPosition="right"
+                className="w-full border-white/15 bg-white text-secondary-950 shadow-[0_18px_55px_rgba(255,255,255,0.14)] sm:w-auto"
               >
                 Read the Full Synopsis
               </Button>
-            </div>
+            </motion.div>
           </div>
 
-          {/* Right Content Area (5 columns) - Gallery Framed Book */}
-          <div className="intro-book-container lg:col-span-5 flex justify-center lg:justify-end mt-8 lg:mt-0">
-            <div className="relative w-full max-w-[500px] aspect-[3/4] bg-secondary-900/30 backdrop-blur-sm rounded-[3rem] border border-white/10 flex items-center justify-center p-8 md:p-12 shadow-2xl group">
-              {/* Internal glowing gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 via-transparent to-secondary-500/10 rounded-[3rem] opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
-              
-              {/* Dynamic 3D Book */}
-              <div className="intro-book relative w-full aspect-[2/3] perspective-[2000px] z-10">
-                <BookCard 
-                  src="/imgs/book-front.jpg" 
-                  alt="Synthetic Heart Book Cover" 
-                  rotate={-6}
-                  className="w-full h-full shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] border-[6px] border-white/10"
-                />
+          <motion.div
+            {...reveal(0.16)}
+            className="flex justify-center lg:col-span-5 lg:justify-end"
+          >
+            <div className="intro-book-stage relative w-full max-w-124">
+              <div className="relative aspect-3/4 overflow-hidden rounded-4xl border border-white/10 bg-white/4.5 p-5 shadow-[0_34px_120px_rgba(0,0,0,0.48)] backdrop-blur-xl sm:rounded-[2.5rem] sm:p-8 lg:p-10">
+                <div className="intro-book-halo pointer-events-none absolute inset-6 rounded-3xl bg-linear-to-br from-primary-500/24 via-white/[0.035] to-secondary-500/12 blur-sm" />
+                <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/8 via-transparent to-primary-900/20" />
+
+                <div className="absolute left-5 top-5 h-10 w-10 rounded-tl-2xl border-l border-t border-primary-400/40 sm:left-7 sm:top-7" />
+                <div className="absolute bottom-5 right-5 h-10 w-10 rounded-br-2xl border-b border-r border-primary-400/40 sm:bottom-7 sm:right-7" />
+
+                <div className="relative z-10 flex h-full items-center justify-center pt-8 sm:pt-4">
+                  <div className="intro-book-float aspect-[0.67/1] w-[82%] will-change-transform">
+                    <BookCard
+                      src="/imgs/book-front.jpg"
+                      alt="Synthetic Heart Book Cover"
+                      rotate={0}
+                      className="h-full w-full border-[5px] border-white/10 shadow-[0_42px_90px_-24px_rgba(0,0,0,0.9)]"
+                    />
+                  </div>
+                </div>
               </div>
-              
-              {/* Decorative Corner Accents */}
-              <div className="absolute top-8 left-8 w-8 h-8 border-t-2 border-l-2 border-primary-500/30 rounded-tl-xl" />
-              <div className="absolute bottom-8 right-8 w-8 h-8 border-b-2 border-r-2 border-primary-500/30 rounded-br-xl" />
             </div>
-          </div>
-
+          </motion.div>
         </div>
       </div>
     </section>

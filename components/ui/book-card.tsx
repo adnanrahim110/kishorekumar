@@ -1,15 +1,10 @@
 "use client";
 
-import { useRef } from "react";
-import Image from "next/image";
-import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import gsap from "gsap";
+import Image from "next/image";
+import { useRef } from "react";
+import { cn } from "@/utils/cn";
 
 interface BookCardProps {
   src: string;
@@ -32,13 +27,12 @@ export function BookCard({ src, alt, className, rotate = 0 }: BookCardProps) {
       const handleMouseMove = (e: MouseEvent) => {
         const { clientX, clientY } = e;
         const { height, width, left, top } = card.getBoundingClientRect();
-        
-        // Calculate position relative to the center of the card
-        const x = (clientX - (left + width / 2)) / (width / 2); // -1 to 1
-        const y = (clientY - (top + height / 2)) / (height / 2); // -1 to 1
+
+        const x = (clientX - (left + width / 2)) / (width / 2);
+        const y = (clientY - (top + height / 2)) / (height / 2);
 
         gsap.to(card, {
-          rotateX: -y * 10, // Max 10 degrees tilt
+          rotateX: -y * 10,
           rotateY: x * 10,
           rotateZ: rotate + x * 2,
           duration: 0.5,
@@ -46,7 +40,7 @@ export function BookCard({ src, alt, className, rotate = 0 }: BookCardProps) {
         });
 
         gsap.to(image, {
-          x: -x * 10, // Parallax inner image
+          x: -x * 10,
           y: -y * 10,
           duration: 0.5,
           ease: "power2.out",
@@ -78,15 +72,15 @@ export function BookCard({ src, alt, className, rotate = 0 }: BookCardProps) {
         card.removeEventListener("mouseleave", handleMouseLeave);
       };
     },
-    { scope: cardRef }
+    { scope: cardRef },
   );
 
   return (
     <div
       ref={cardRef}
       className={cn(
-        "relative rounded-xl md:rounded-[2rem] overflow-hidden shadow-2xl transition-shadow duration-300 hover:shadow-primary-500/20 group",
-        className
+        "relative rounded-xl md:rounded-4xl overflow-hidden shadow-2xl transition-shadow duration-300 hover:shadow-primary-500/20 group",
+        className,
       )}
       style={{
         transform: `rotate(${rotate}deg)`,
@@ -94,13 +88,13 @@ export function BookCard({ src, alt, className, rotate = 0 }: BookCardProps) {
         perspective: "1000px",
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-tr from-primary-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 rounded-xl md:rounded-[2rem] pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-tr from-primary-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 rounded-xl md:rounded-4xl pointer-events-none" />
       <Image
         ref={imageRef as any}
         src={src}
         alt={alt}
         fill
-        className="object-cover scale-[1.05] rounded-xl md:rounded-[2rem]"
+        className="object-cover scale-[1.05] rounded-xl md:rounded-4xl"
         sizes="(max-width: 768px) 100vw, 50vw"
       />
     </div>

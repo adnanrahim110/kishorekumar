@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-import { SectionHeading } from "@/components/ui/section-heading";
 import { Star } from "lucide-react";
+import { useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -39,7 +39,7 @@ const REVIEWS = [
     text: "Tewary's background as a physician shines in every chapter. The anatomy of heartbreak has never been dissected quite like this. A triumph.",
     author: "Lillian Cross",
     role: "Literary Critic",
-  }
+  },
 ];
 
 export function ReviewsSection() {
@@ -75,25 +75,22 @@ export function ReviewsSection() {
         stagger: 1.5,
       });
     },
-    { scope: sectionRef }
+    { scope: sectionRef },
   );
 
   return (
-    <section 
-      ref={sectionRef} 
+    <section
+      ref={sectionRef}
       className="relative bg-secondary-950 py-32 overflow-hidden rounded-t-[3rem] -mt-12 z-40 shadow-[0_-20px_60px_rgba(0,0,0,0.4)] border-t border-white/5"
     >
-      {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-900/20 via-secondary-950 to-secondary-950 opacity-60 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-primary-900/20 via-secondary-950 to-secondary-950 opacity-60 pointer-events-none" />
       <div className="review-shape absolute top-[10%] left-[10%] w-[20vw] h-[20vw] bg-primary-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
       <div className="review-shape absolute bottom-[20%] right-[-5%] w-[30vw] h-[30vw] bg-secondary-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
 
       <div className="container mx-auto max-w-7xl relative z-10">
-        
-        {/* Section Header */}
         <div className="review-header-anim mb-16 md:mb-24 px-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-          <SectionHeading 
-            title="The World is Reacting." 
+          <SectionHeading
+            title="The World is Reacting."
             subtitle="03 // Critical Acclaim"
             className="text-white mb-0"
           />
@@ -104,42 +101,12 @@ export function ReviewsSection() {
           </div>
         </div>
 
-        {/* Marquee Container */}
         <div className="relative w-full overflow-hidden flex flex-col gap-8 pb-12">
-          
-          {/* Top Marquee (Scrolling Left) */}
           <div className="flex w-fit animate-marquee hover:pause-animation">
             {[...REVIEWS, ...REVIEWS].map((review, i) => (
-              <div 
+              <div
                 key={`${review.id}-${i}`}
-                className="w-[300px] md:w-[450px] shrink-0 mx-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-colors group cursor-grab active:cursor-grabbing"
-              >
-                <div className="flex gap-1 text-primary-500 mb-6 opacity-80 group-hover:opacity-100 transition-opacity">
-                  {[...Array(5)].map((_, starIdx) => (
-                    <Star key={starIdx} size={16} fill="currentColor" />
-                  ))}
-                </div>
-                <p className="text-secondary-200 text-lg md:text-xl font-light italic leading-relaxed mb-8">
-                  "{review.text}"
-                </p>
-                <div className="flex flex-col">
-                  <span className="text-white font-heading font-bold text-lg tracking-wide">
-                    {review.author}
-                  </span>
-                  <span className="text-primary-400 text-sm tracking-widest uppercase mt-1">
-                    {review.role}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          {/* Bottom Marquee (Scrolling Right - Reversed array for variety) */}
-          <div className="flex w-fit animate-marquee-reverse hover:pause-animation">
-            {[...REVIEWS, ...REVIEWS].reverse().map((review, i) => (
-              <div 
-                key={`rev-${review.id}-${i}`}
-                className="w-[300px] md:w-[450px] shrink-0 mx-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-colors group cursor-grab active:cursor-grabbing"
+                className="w-75 md:w-112.5 shrink-0 mx-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-colors group cursor-grab active:cursor-grabbing"
               >
                 <div className="flex gap-1 text-primary-500 mb-6 opacity-80 group-hover:opacity-100 transition-opacity">
                   {[...Array(5)].map((_, starIdx) => (
@@ -161,6 +128,31 @@ export function ReviewsSection() {
             ))}
           </div>
 
+          <div className="flex w-fit animate-marquee-reverse hover:pause-animation">
+            {[...REVIEWS, ...REVIEWS].reverse().map((review, i) => (
+              <div
+                key={`rev-${review.id}-${i}`}
+                className="w-75 md:w-112.5 shrink-0 mx-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-colors group cursor-grab active:cursor-grabbing"
+              >
+                <div className="flex gap-1 text-primary-500 mb-6 opacity-80 group-hover:opacity-100 transition-opacity">
+                  {[...Array(5)].map((_, starIdx) => (
+                    <Star key={starIdx} size={16} fill="currentColor" />
+                  ))}
+                </div>
+                <p className="text-secondary-200 text-lg md:text-xl font-light italic leading-relaxed mb-8">
+                  "{review.text}"
+                </p>
+                <div className="flex flex-col">
+                  <span className="text-white font-heading font-bold text-lg tracking-wide">
+                    {review.author}
+                  </span>
+                  <span className="text-primary-400 text-sm tracking-widest uppercase mt-1">
+                    {review.role}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

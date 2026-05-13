@@ -1,155 +1,206 @@
 "use client";
 
-import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-import { SectionHeading } from "@/components/ui/section-heading";
 import { Button } from "@/components/ui/button";
+import {
+  ArrowRight,
+  Feather,
+  HeartPulse,
+  Mail,
+  Stethoscope,
+} from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 
-gsap.registerPlugin(ScrollTrigger);
+const motionEase = [0.22, 1, 0.36, 1] as const;
+
+const authorDetails = [
+  { label: "Discipline", value: "Medicine" },
+  { label: "Voice", value: "Psychological Fiction" },
+  { label: "Focus", value: "Human Emotion" },
+];
 
 export function AuthorIntro() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
-  useGSAP(
-    () => {
-      if (!sectionRef.current) return;
-
-      // Image reveal animation
-      gsap.from(".author-image-wrapper", {
-        y: 150,
-        opacity: 0,
-        rotationZ: -5,
-        duration: 1.5,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
-        },
-      });
-
-      // Text stagger animation
-      gsap.from(".author-anim", {
-        y: 60,
-        opacity: 0,
-        duration: 1.2,
-        stagger: 0.15,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".author-text-container",
-          start: "top 80%",
-        },
-      });
-
-      // Background shapes
-      gsap.to(".author-shape", {
-        y: -40,
-        rotation: 15,
-        duration: 8,
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-        stagger: 2,
-      });
-    },
-    { scope: sectionRef }
-  );
+  const reveal = (delay = 0) => ({
+    initial: shouldReduceMotion ? false : { opacity: 0, y: 32 },
+    whileInView: shouldReduceMotion ? undefined : { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.35 },
+    transition: { duration: 0.72, delay, ease: motionEase },
+  });
 
   return (
-    <section 
-      ref={sectionRef} 
-      className="relative bg-secondary-50 py-32 lg:py-48 px-6 overflow-hidden rounded-t-[3rem] -mt-12 z-30 shadow-[0_-30px_80px_rgba(0,0,0,0.6)]"
+    <section
+      id="author"
+      className="relative z-30 -mt-12 overflow-hidden rounded-t-[3rem] bg-secondary-50 px-4 py-28 text-secondary-950 shadow-[0_-30px_90px_rgba(0,0,0,0.46)] sm:px-6 sm:py-32 lg:px-8 lg:py-40"
     >
-      {/* Editorial Background Text */}
-      <div className="absolute top-[10%] left-[-5%] text-[20vw] font-heading font-black text-secondary-200/30 whitespace-nowrap pointer-events-none select-none z-0">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(26,42,55,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(26,42,55,0.03)_1px,transparent_1px)] bg-size-[72px_72px] opacity-55" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-linear-to-b from-white via-secondary-50/90 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-linear-to-t from-secondary-50 via-secondary-50/86 to-transparent" />
+      <div className="pointer-events-none absolute -left-[5%] top-[7%] select-none font-heading text-[18vw] font-black leading-none tracking-wide text-secondary-200/45">
         AUTHOR
       </div>
-      
-      {/* Subtle Background Shapes */}
-      <div className="author-shape absolute top-[20%] right-[-10%] w-[40vw] h-[40vw] bg-primary-100 rounded-full blur-[100px] pointer-events-none z-0 mix-blend-multiply opacity-60" />
-      <div className="author-shape absolute bottom-[10%] left-[-5%] w-[30vw] h-[30vw] bg-secondary-200 rounded-full blur-[80px] pointer-events-none z-0 mix-blend-multiply opacity-50" />
+      <div className="pointer-events-none absolute right-[-12%] top-[18%] h-[30vw] w-[30vw] rounded-full bg-primary-100/60 blur-[64px] mix-blend-multiply" />
+      <div className="pointer-events-none absolute bottom-[6%] left-[-10%] h-[24vw] w-[24vw] rounded-full bg-secondary-200/55 blur-[58px] mix-blend-multiply" />
 
-      <div className="container mx-auto max-w-7xl relative z-10">
-        
-        {/* Section Header */}
-        <div className="mb-16 md:mb-24 flex flex-col md:flex-row justify-between items-start md:items-end border-b border-secondary-200 pb-8 gap-6">
-          <SectionHeading 
-            title="The Mind Behind the Machine." 
-            subtitle="02 // The Author"
-            className="text-secondary-950 mb-0"
-          />
-        </div>
-
-        {/* 12-Column Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
-          
-          {/* Left Column: Author Image (5 columns) */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-start">
-            <div className="author-image-wrapper relative w-full max-w-[450px] aspect-[4/5] rounded-t-full rounded-b-[3rem] p-4 bg-white shadow-2xl border border-secondary-100">
-              <div className="relative w-full h-full rounded-t-full rounded-b-[2.5rem] overflow-hidden">
-                <Image 
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800&auto=format&fit=crop" 
-                  alt="Dr. Kishor K. Tewary" 
-                  fill 
-                  className="object-cover transition-transform duration-1000 hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-secondary-950/10 mix-blend-overlay pointer-events-none" />
-              </div>
-              
-              {/* Floating decorative badge */}
-              <div className="absolute bottom-12 -right-6 md:-right-12 bg-primary-500 text-white p-6 rounded-full shadow-2xl shadow-primary-500/40 w-32 h-32 flex flex-col items-center justify-center rotate-12">
-                <span className="font-heading font-bold text-2xl leading-none">M.D.</span>
-                <span className="text-[10px] uppercase tracking-widest mt-1 opacity-90 text-center">Author &<br/>Doctor</span>
-              </div>
-            </div>
+      <div className="relative z-10 mx-auto w-full max-w-7xl">
+        <motion.div
+          {...reveal()}
+          className="mb-14 flex flex-col items-start justify-between gap-6 border-b border-secondary-200 pb-8 sm:mb-20 md:flex-row md:items-end lg:mb-24"
+        >
+          <div>
+            <p className="mb-4 text-xs font-black uppercase tracking-[0.32em] text-primary-600 sm:text-sm">
+              02 // The Author
+            </p>
+            <h2 className="max-w-4xl font-heading text-4xl font-black leading-[1.02] tracking-tight text-secondary-950 sm:text-5xl lg:text-6xl">
+              The Mind Behind the Machine.
+            </h2>
           </div>
 
-          {/* Right Column: Narrative & Details (7 columns) */}
-          <div className="author-text-container lg:col-span-7 flex flex-col gap-8">
-            
-            <div className="author-anim">
-              <h3 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black text-secondary-950 leading-[1.1] tracking-tight mb-6">
-                Bridging the gap between <br />
-                <span className="text-primary-500 italic font-medium">science</span> and <span className="text-secondary-500 italic font-medium">storytelling.</span>
+          <div className="flex items-center gap-3 rounded-full border border-secondary-200 bg-white/85 px-5 py-2 text-xs font-black uppercase tracking-[0.22em] text-secondary-700 shadow-[0_14px_40px_rgba(26,42,55,0.08)]">
+            <Stethoscope size={15} />
+            Doctor + Author
+          </div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-20">
+          <motion.div
+            {...reveal(0.08)}
+            className="flex justify-center lg:col-span-5 lg:justify-start"
+          >
+            <div className="relative w-full max-w-[29rem]">
+              <div className="pointer-events-none absolute -inset-4 rounded-t-full rounded-b-[3rem] border border-primary-300/30" />
+              <div className="pointer-events-none absolute -inset-8 rounded-t-full rounded-b-[3.5rem] border border-secondary-300/20" />
+
+              <div className="relative overflow-hidden rounded-t-full rounded-b-[3rem] border border-secondary-200 bg-white p-3 shadow-[0_34px_90px_rgba(26,42,55,0.18)]">
+                <div className="relative aspect-4/5 overflow-hidden rounded-t-full rounded-b-[2.55rem] bg-secondary-100">
+                  <Image
+                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=900&auto=format&fit=crop"
+                    alt="Dr. Kishor K. Tewary"
+                    fill
+                    sizes="(max-width: 768px) 92vw, (max-width: 1200px) 42vw, 29rem"
+                    className="object-cover saturate-95 transition-transform duration-700 hover:scale-105"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-secondary-950/22 via-transparent to-white/16" />
+                </div>
+
+                <div className="absolute left-6 top-8 rounded-full border border-white/55 bg-white/88 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-secondary-800 shadow-[0_12px_34px_rgba(26,42,55,0.14)]">
+                  Clinical Lens
+                </div>
+
+                <div className="absolute -right-2 bottom-10 flex h-31 w-31 rotate-6 flex-col items-center justify-center rounded-full bg-primary-500 p-5 text-center text-white shadow-[0_24px_70px_rgba(208,78,76,0.34)] sm:-right-7 sm:h-34 sm:w-34">
+                  <HeartPulse size={24} className="mb-2" />
+                  <span className="font-heading text-2xl font-black leading-none">
+                    M.D.
+                  </span>
+                  <span className="mt-1 text-[10px] font-black uppercase leading-tight tracking-[0.18em]">
+                    Author
+                  </span>
+                </div>
+              </div>
+
+              <div className="absolute -bottom-8 left-5 right-5 rounded-2xl border border-secondary-200 bg-white/92 p-4 shadow-[0_18px_50px_rgba(26,42,55,0.12)] sm:left-10 sm:right-auto sm:w-72">
+                <div className="mb-3 flex items-center gap-2 text-primary-600">
+                  <Feather size={16} />
+                  <span className="text-[10px] font-black uppercase tracking-[0.22em]">
+                    Narrative Method
+                  </span>
+                </div>
+                <p className="text-sm font-medium leading-relaxed text-secondary-700">
+                  Medical precision shaped into emotional suspense.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          <div className="flex flex-col gap-8 lg:col-span-7">
+            <motion.div {...reveal(0.1)}>
+              <h3 className="max-w-3xl font-heading text-4xl font-black leading-[1.06] tracking-tight text-secondary-950 sm:text-5xl lg:text-6xl">
+                Bridging the gap between{" "}
+                <span className="font-medium italic text-primary-600">
+                  science
+                </span>{" "}
+                and{" "}
+                <span className="font-medium italic text-secondary-600">
+                  storytelling.
+                </span>
               </h3>
-            </div>
-            
-            <div className="author-anim h-px w-24 bg-secondary-300" />
-            
-            <div className="author-anim relative">
-              <span className="absolute -top-10 -left-6 text-8xl font-heading text-secondary-200 opacity-50 select-none">"</span>
-              <p className="text-xl md:text-3xl text-secondary-800 font-medium leading-snug italic relative z-10 pl-6 border-l-4 border-primary-500">
-                I've spent my career decoding the biology of the human heart, only to realize its greatest mysteries are written in fiction.
-              </p>
-            </div>
-            
-            <p className="author-anim text-lg text-secondary-600 leading-relaxed font-light mt-4">
-              Dr. Kishor K. Tewary is a practicing physician who intertwines his profound understanding of human anatomy with gripping psychological narratives. His transition from medicine to fiction explores the very limits of what makes us human—and what happens when technology attempts to replicate our deepest emotions.
-            </p>
-            
-            <div className="author-anim pt-8 flex flex-col sm:flex-row gap-6">
-              <Button 
-                href="/about-author" 
-                size="lg" 
+            </motion.div>
+
+            <motion.div
+              {...reveal(0.14)}
+              className="h-px w-24 bg-secondary-300"
+            />
+
+            <motion.figure
+              {...reveal(0.18)}
+              className="relative border-l-4 border-primary-500 pl-6"
+            >
+              <span className="pointer-events-none absolute -left-4 -top-11 select-none font-heading text-8xl font-black leading-none text-primary-100">
+                &quot;
+              </span>
+              <blockquote className="relative z-10 max-w-3xl text-xl font-medium italic leading-snug text-secondary-800 sm:text-2xl lg:text-3xl">
+                I&apos;ve spent my career decoding the biology of the human heart,
+                only to realize its greatest mysteries are written in fiction.
+              </blockquote>
+            </motion.figure>
+
+            <motion.p
+              {...reveal(0.22)}
+              className="max-w-3xl text-lg font-light leading-relaxed text-secondary-700 sm:text-xl"
+            >
+              Dr. Kishor K. Tewary is a practicing physician who intertwines
+              his understanding of human anatomy with gripping psychological
+              narratives. His transition from medicine to fiction explores the
+              limits of what makes us human and what happens when technology
+              attempts to replicate our deepest emotions.
+            </motion.p>
+
+            <motion.div
+              {...reveal(0.26)}
+              className="grid max-w-3xl grid-cols-1 overflow-hidden rounded-2xl border border-secondary-200 bg-white/72 shadow-[0_18px_55px_rgba(26,42,55,0.08)] sm:grid-cols-3"
+            >
+              {authorDetails.map((item) => (
+                <div
+                  key={item.label}
+                  className="border-b border-secondary-200 p-5 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
+                >
+                  <p className="mb-2 text-[10px] font-black uppercase tracking-[0.24em] text-secondary-500">
+                    {item.label}
+                  </p>
+                  <p className="text-base font-semibold text-secondary-950 sm:text-lg">
+                    {item.value}
+                  </p>
+                </div>
+              ))}
+            </motion.div>
+
+            <motion.div
+              {...reveal(0.3)}
+              className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center"
+            >
+              <Button
+                href="/about-author"
+                size="lg"
                 variant="primary"
-                className="shadow-xl shadow-primary-500/20 w-full sm:w-auto"
+                icon={<ArrowRight size={18} />}
+                iconPosition="right"
+                className="w-full bg-primary-50 text-primary-700 shadow-[0_18px_50px_rgba(208,78,76,0.18)] sm:w-auto"
               >
                 Read Full Biography
               </Button>
-              <Button 
-                href="#contact" 
-                size="lg" 
+              <Button
+                href="#contact"
+                size="lg"
                 variant="outline"
-                className="border-secondary-300 text-secondary-700 w-full sm:w-auto"
+                icon={<Mail size={18} />}
+                iconPosition="right"
+                className="w-full border-secondary-300 bg-white/65 text-secondary-800 shadow-[0_14px_38px_rgba(26,42,55,0.08)] sm:w-auto"
               >
                 Get in Touch
               </Button>
-            </div>
-            
+            </motion.div>
           </div>
-
         </div>
       </div>
     </section>

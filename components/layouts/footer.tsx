@@ -5,7 +5,7 @@ import { FaInstagram, FaTwitter } from "react-icons/fa";
 
 export function Footer() {
   return (
-    <footer className="relative -mt-12 z-[60] bg-secondary-950 text-secondary-50 pt-24 pb-8 overflow-hidden rounded-t-[3rem] md:rounded-t-[5rem] shadow-[0_-20px_60px_rgba(0,0,0,0.5)] border-t border-white/5">
+    <footer className="relative -mt-12 z-60 bg-secondary-950 text-secondary-50 pt-24 pb-8 overflow-hidden rounded-t-[3rem] md:rounded-t-[5rem] shadow-[0_-20px_60px_rgba(0,0,0,0.5)] border-t border-white/5">
       <div className="absolute top-0 left-0 w-full overflow-hidden pointer-events-none select-none opacity-5">
         <h2 className="text-[15vw] font-heading font-bold whitespace-nowrap text-center leading-none mt-8">
           SYNTHETIC HEART

@@ -1,17 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { useRef } from "react";
+import { cn } from "@/utils/cn";
 
 gsap.registerPlugin(ScrollTrigger);
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 interface SectionHeadingProps {
   title: string;
@@ -28,7 +23,6 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Split title into words for staggered animation
   const words = title.split(" ");
 
   useGSAP(
@@ -38,8 +32,8 @@ export function SectionHeading({
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 80%", // trigger when the top of the element hits 80% down the viewport
-          toggleActions: "play none none reverse", // Play on enter, reverse on leave back
+          start: "top 80%",
+          toggleActions: "play none none reverse",
         },
       });
 
@@ -62,10 +56,10 @@ export function SectionHeading({
           stagger: 0.05,
           ease: "back.out(1.7)",
         },
-        subtitle ? "-=0.4" : 0
+        subtitle ? "-=0.4" : 0,
       );
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
 
   const alignments = {
@@ -84,7 +78,10 @@ export function SectionHeading({
           {subtitle}
         </span>
       )}
-      <h2 className="text-4xl md:text-6xl font-heading font-bold text-secondary-900 leading-tight flex flex-wrap gap-[0.25em]" style={{ perspective: "1000px" }}>
+      <h2
+        className="text-4xl md:text-6xl font-heading font-bold text-secondary-900 leading-tight flex flex-wrap gap-[0.25em]"
+        style={{ perspective: "1000px" }}
+      >
         {words.map((word, i) => (
           <span key={i} className="word inline-block origin-bottom">
             {word}
