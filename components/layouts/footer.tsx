@@ -1,71 +1,93 @@
+import { StackCard } from "@/components/layouts/stack-card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Mail } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { FaInstagram, FaTwitter } from "react-icons/fa";
 
 export function Footer() {
   return (
-    <footer className="relative -mt-12 z-60 bg-secondary-950 text-secondary-50 pt-24 pb-8 overflow-hidden rounded-t-[3rem] md:rounded-t-[5rem] shadow-[0_-20px_60px_rgba(0,0,0,0.5)] border-t border-white/5">
-      <div className="absolute top-0 left-0 w-full overflow-hidden pointer-events-none select-none opacity-5">
-        <h2 className="text-[15vw] font-heading font-bold whitespace-nowrap text-center leading-none mt-8">
+    <StackCard
+      as="footer"
+      variant="footer"
+      aria-labelledby="footer-heading"
+      className="pt-14 pb-7 md:pt-28"
+    >
+      <div className="absolute -top-8 left-0 w-full overflow-hidden pointer-events-none select-none opacity-3">
+        <h2 className="mt-3 text-center font-heading text-[17vw] font-bold leading-none whitespace-nowrap">
           SYNTHETIC HEART
         </h2>
       </div>
 
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <div className="flex flex-col items-center justify-center text-center mb-24">
-          <h3 className="text-4xl md:text-6xl font-heading font-bold text-primary-300 mb-6 max-w-2xl">
+      <div className="container relative z-10 mx-auto px-6 md:px-12">
+        <div className="mb-12 flex flex-col items-start justify-between gap-6 border-b border-secondary-800/80 pb-8 md:flex-row md:items-center">
+          <h3
+            id="footer-heading"
+            className="max-w-4xl font-heading text-3xl font-bold leading-tight text-primary-300 md:text-4xl lg:text-6xl"
+          >
             Ready to explore the depths of love and deception?
           </h3>
           <Button
-            href="/about-book"
+            href="/book"
             variant="primary"
-            size="lg"
+            size="md"
             icon={
-              <span className="bg-white/20 p-1.5 rounded-full">
-                <ArrowRight size={18} />
+              <span className="rounded-full bg-white/20 p-1">
+                <ArrowRight size={16} />
               </span>
             }
             iconPosition="right"
+            className="shrink-0"
           >
             Discover the Book
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-16">
+        <div className="mb-10 grid grid-cols-1 gap-9 md:grid-cols-12 md:gap-8">
           <div className="md:col-span-5">
-            <h4 className="text-2xl font-heading font-bold text-white mb-4">
-              Dr. Kishor K Tewary
-            </h4>
-            <p className="text-secondary-400 max-w-sm mb-8 leading-relaxed">
+            <div className="mb-3">
+              <Image
+                src="/imgs/logo-w.png"
+                width={720}
+                height={400}
+                className="w-auto h-18"
+                alt="Kishore Kumar - Logo"
+              />
+            </div>
+            <p className="mb-5 max-w-sm leading-relaxed text-secondary-400">
               Pediatrician, life coach, and author exploring the complex
               intersections of ambition, vulnerability, and the human heart.
             </p>
             <div className="flex gap-4">
               <Link
                 href="#"
-                className="p-3 rounded-full bg-secondary-900 border border-secondary-800 text-primary-400 hover:bg-primary-500 hover:text-white hover:border-primary-500 transition-all duration-300"
+                className="rounded-full border border-secondary-800 bg-secondary-900 p-2.5 text-primary-400 transition-all duration-300 hover:border-primary-500 hover:bg-primary-500 hover:text-white"
               >
-                <FaTwitter size={20} />
+                <FaTwitter size={18} />
               </Link>
               <Link
                 href="#"
-                className="p-3 rounded-full bg-secondary-900 border border-secondary-800 text-primary-400 hover:bg-primary-500 hover:text-white hover:border-primary-500 transition-all duration-300"
+                className="rounded-full border border-secondary-800 bg-secondary-900 p-2.5 text-primary-400 transition-all duration-300 hover:border-primary-500 hover:bg-primary-500 hover:text-white"
               >
-                <FaInstagram size={20} />
+                <FaInstagram size={18} />
               </Link>
               <Link
                 href="/contact"
-                className="p-3 rounded-full bg-secondary-900 border border-secondary-800 text-primary-400 hover:bg-primary-500 hover:text-white hover:border-primary-500 transition-all duration-300"
+                className="rounded-full border border-secondary-800 bg-secondary-900 p-2.5 text-primary-400 transition-all duration-300 hover:border-primary-500 hover:bg-primary-500 hover:text-white"
               >
-                <Mail size={20} />
+                <Mail size={18} />
               </Link>
             </div>
           </div>
 
-          <div className="md:col-span-3 md:col-start-8">
-            <h5 className="text-lg font-bold text-white mb-6">Navigation</h5>
-            <div className="flex flex-col gap-4">
+          <nav
+            className="md:col-span-3 md:col-start-8"
+            aria-label="Footer navigation"
+          >
+            <h5 className="mb-4 text-3xl tracking-wide font-bold text-white">
+              Navigation
+            </h5>
+            <div className="flex flex-col gap-3">
               <Link
                 href="/"
                 className="text-secondary-400 hover:text-primary-300 transition-colors inline-flex w-fit"
@@ -73,7 +95,7 @@ export function Footer() {
                 Home
               </Link>
               <Link
-                href="/about-book"
+                href="/book"
                 className="text-secondary-400 hover:text-primary-300 transition-colors inline-flex w-fit"
               >
                 About the Book
@@ -91,11 +113,13 @@ export function Footer() {
                 Get in Touch
               </Link>
             </div>
-          </div>
+          </nav>
 
-          <div className="md:col-span-2">
-            <h5 className="text-lg font-bold text-white mb-6">Legal</h5>
-            <div className="flex flex-col gap-4">
+          <nav className="md:col-span-2" aria-label="Legal navigation">
+            <h5 className="mb-4 text-3xl tracking-wide font-bold text-white">
+              Legal
+            </h5>
+            <div className="flex flex-col gap-3">
               <Link
                 href="#"
                 className="text-secondary-400 hover:text-primary-300 transition-colors inline-flex w-fit"
@@ -109,21 +133,16 @@ export function Footer() {
                 Terms of Service
               </Link>
             </div>
-          </div>
+          </nav>
         </div>
 
-        <div className="pt-8 border-t border-secondary-800 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-secondary-800 pt-5 md:flex-row">
           <p className="text-sm text-secondary-500">
             &copy; {new Date().getFullYear()} Dr. Kishor K Tewary. All rights
             reserved.
           </p>
-          <div className="flex items-center gap-2 text-sm text-secondary-500">
-            Designed with{" "}
-            <Heart size={14} className="text-primary-500 fill-primary-500" />{" "}
-            for storytelling
-          </div>
         </div>
       </div>
-    </footer>
+    </StackCard>
   );
 }

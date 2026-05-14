@@ -1,7 +1,9 @@
 "use client";
 
+import { StackCard } from "@/components/layouts/stack-card";
 import { BookCard } from "@/components/ui/book-card";
 import { Button } from "@/components/ui/button";
+import { revealProps } from "@/utils/animations";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -10,8 +12,6 @@ import { motion, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const motionEase = [0.22, 1, 0.36, 1] as const;
 
 const bookMeta = [
   { label: "Genre", value: "Romantic Thriller" },
@@ -30,53 +30,25 @@ export function BookIntro() {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.to(".intro-book-float", {
-          y: -18,
-          rotationZ: -1.25,
-          duration: 5.5,
-          yoyo: true,
-          repeat: -1,
-          ease: "sine.inOut",
-        });
-
-        gsap.to(".intro-book-halo", {
-          scale: 1.08,
-          opacity: 0.72,
-          duration: 4.8,
-          yoyo: true,
-          repeat: -1,
-          ease: "sine.inOut",
-        });
-
-        gsap.to(".intro-ambient-line", {
-          xPercent: 12,
-          opacity: 0.64,
-          duration: 6,
-          yoyo: true,
-          repeat: -1,
-          ease: "sine.inOut",
-          stagger: 0.7,
-        });
-
         gsap.to(".intro-grid-field", {
-          yPercent: -7,
+          yPercent: -4,
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top bottom",
             end: "bottom top",
-            scrub: 1,
+            scrub: 0.35,
           },
         });
 
         gsap.to(".intro-book-stage", {
-          yPercent: -5,
+          yPercent: -3,
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top bottom",
             end: "bottom top",
-            scrub: 0.8,
+            scrub: 0.3,
           },
         });
       });
@@ -86,18 +58,16 @@ export function BookIntro() {
     { scope: sectionRef },
   );
 
-  const reveal = (delay = 0) => ({
-    initial: shouldReduceMotion ? false : { opacity: 0, y: 32 },
-    whileInView: shouldReduceMotion ? undefined : { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.35 },
-    transition: { duration: 0.72, delay, ease: motionEase },
-  });
+  const reveal = (delay = 0) =>
+    revealProps(shouldReduceMotion, { delay, duration: 0.68, y: 28 });
 
   return (
-    <section
+    <StackCard
       id="story"
       ref={sectionRef}
-      className="relative z-20 -mt-12 overflow-hidden rounded-t-[3rem] border-t border-white/5 bg-secondary-950 px-4 py-28 shadow-[0_-28px_80px_rgba(0,0,0,0.42)] sm:px-6 sm:py-32 lg:px-8 lg:py-40"
+      variant="dark"
+      aria-labelledby="story-heading"
+      className="px-4 py-28 sm:px-6 sm:py-32 lg:px-8 lg:py-40"
     >
       <div className="intro-grid-field pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.026)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-size-[64px_64px] opacity-55 mix-blend-overlay" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-52 bg-linear-to-b from-primary-500/18 via-secondary-950/40 to-transparent" />
@@ -117,7 +87,10 @@ export function BookIntro() {
             <p className="mb-4 text-xs font-black uppercase tracking-[0.32em] text-primary-400 sm:text-sm">
               01 // The Premise
             </p>
-            <h2 className="max-w-4xl font-heading text-4xl font-black leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h2
+              id="story-heading"
+              className="max-w-4xl font-heading text-4xl font-black leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-6xl"
+            >
               A Collision of Logic and Emotion.
             </h2>
           </div>
@@ -178,7 +151,7 @@ export function BookIntro() {
               className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center"
             >
               <Button
-                href="/about-book"
+                href="/book"
                 variant="outline"
                 tone="soft"
                 size="lg"
@@ -218,6 +191,6 @@ export function BookIntro() {
           </motion.div>
         </div>
       </div>
-    </section>
+    </StackCard>
   );
 }

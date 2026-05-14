@@ -1,5 +1,6 @@
 "use client";
 
+import { StackCard } from "@/components/layouts/stack-card";
 import { cn } from "@/utils/cn";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -78,15 +79,12 @@ export function Hero() {
             1.0,
           );
 
-        gsap.to(".hero-ambient-orb", {
-          y: -25,
-          x: 15,
-          scale: 1.05,
-          duration: 7,
-          yoyo: true,
-          repeat: -1,
-          ease: "sine.inOut",
-          stagger: 1.5,
+        gsap.from(".hero-ambient-orb", {
+          opacity: 0,
+          scale: 0.96,
+          duration: 1.2,
+          ease: "power2.out",
+          stagger: 0.12,
         });
       });
     },
@@ -94,10 +92,16 @@ export function Hero() {
   );
 
   return (
-    <section
+    <StackCard
+      id="home"
       ref={sectionRef}
-      className="relative min-h-screen overflow-hidden bg-secondary-950"
+      variant="hero"
+      aria-labelledby="hero-heading"
+      className="min-h-screen bg-secondary-950"
     >
+      <h1 id="hero-heading" className="sr-only">
+        Synthetic Heart
+      </h1>
       <div className="hero-split-left absolute top-0 left-0 w-1/2 h-full bg-primary-500 z-0">
         <div className="absolute inset-0 bg-linear-to-br from-primary-400/40 via-transparent to-primary-700/30" />
         <div className="hero-ambient-orb absolute top-[15%] left-[10%] w-[35vw] h-[35vw] bg-primary-300/25 rounded-full blur-[100px]" />
@@ -213,6 +217,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-    </section>
+    </StackCard>
   );
 }

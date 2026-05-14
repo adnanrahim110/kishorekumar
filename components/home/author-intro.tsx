@@ -1,6 +1,8 @@
 "use client";
 
+import { StackCard } from "@/components/layouts/stack-card";
 import { Button } from "@/components/ui/button";
+import { revealProps } from "@/utils/animations";
 import {
   ArrowRight,
   Feather,
@@ -11,8 +13,6 @@ import {
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 
-const motionEase = [0.22, 1, 0.36, 1] as const;
-
 const authorDetails = [
   { label: "Discipline", value: "Medicine" },
   { label: "Voice", value: "Psychological Fiction" },
@@ -22,17 +22,15 @@ const authorDetails = [
 export function AuthorIntro() {
   const shouldReduceMotion = useReducedMotion();
 
-  const reveal = (delay = 0) => ({
-    initial: shouldReduceMotion ? false : { opacity: 0, y: 32 },
-    whileInView: shouldReduceMotion ? undefined : { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.35 },
-    transition: { duration: 0.72, delay, ease: motionEase },
-  });
+  const reveal = (delay = 0) =>
+    revealProps(shouldReduceMotion, { delay, duration: 0.68, y: 28 });
 
   return (
-    <section
+    <StackCard
       id="author"
-      className="relative z-30 -mt-12 overflow-hidden rounded-t-[3rem] bg-secondary-50 px-4 py-28 text-secondary-950 shadow-[0_-30px_90px_rgba(0,0,0,0.46)] sm:px-6 sm:py-32 lg:px-8 lg:py-40"
+      variant="light"
+      aria-labelledby="author-heading"
+      className="px-4 py-28 sm:px-6 sm:py-32 lg:px-8 lg:py-40"
     >
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(26,42,55,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(26,42,55,0.03)_1px,transparent_1px)] bg-size-[72px_72px] opacity-55" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-linear-to-b from-white via-secondary-50/90 to-transparent" />
@@ -52,7 +50,10 @@ export function AuthorIntro() {
             <p className="mb-4 text-xs font-black uppercase tracking-[0.32em] text-primary-600 sm:text-sm">
               02 // The Author
             </p>
-            <h2 className="max-w-4xl font-heading text-4xl font-black leading-[1.02] tracking-tight text-secondary-950 sm:text-5xl lg:text-6xl">
+            <h2
+              id="author-heading"
+              className="max-w-4xl font-heading text-4xl font-black leading-[1.02] tracking-tight text-secondary-950 sm:text-5xl lg:text-6xl"
+            >
               The Mind Behind the Machine.
             </h2>
           </div>
@@ -203,6 +204,6 @@ export function AuthorIntro() {
           </div>
         </div>
       </div>
-    </section>
+    </StackCard>
   );
 }

@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useRef, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/utils/cn";
 
@@ -24,11 +22,18 @@ export type ButtonProps = ButtonBaseProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonBaseProps> &
   Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof ButtonBaseProps>;
 
-const HOVER_MAP: Record<string, { bg: string; text: string }> = {
-  primary:   { bg: "#d04e4c", text: "#ffffff" },
-  secondary: { bg: "#1a2a37", text: "#ffffff" },
-  outline:   { bg: "#d04e4c", text: "#ffffff" },
-  ghost:     { bg: "#f4f8fb", text: "#1a2a37" },
+const hoverBgClasses = {
+  primary: "bg-primary-500",
+  secondary: "bg-secondary-950",
+  outline: "bg-primary-500",
+  ghost: "bg-secondary-50",
+};
+
+const hoverTextClasses = {
+  primary: "group-hover:text-white",
+  secondary: "group-hover:text-white",
+  outline: "group-hover:text-white",
+  ghost: "group-hover:text-secondary-950",
 };
 
 export function Button({
@@ -44,78 +49,7 @@ export function Button({
   href,
   ...props
 }: ButtonProps) {
-  const containerRef = useRef<HTMLElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
   const isDisabled = disabled || loading;
-
-  useGSAP(
-    () => {
-      if (isDisabled || !containerRef.current || !bgRef.current || !contentRef.current) return;
-
-      const btn = containerRef.current;
-      const bg = bgRef.current;
-      const content = contentRef.current;
-      const { text } = HOVER_MAP[variant] || HOVER_MAP.primary;
-
-      let originalColor = "";
-
-      const handleMouseEnter = () => {
-        originalColor = getComputedStyle(content).color;
-
-        gsap.to(btn, {
-          scale: 1.04,
-          duration: 0.15,
-          yoyo: true,
-          repeat: 1,
-          ease: "power2.out",
-        });
-
-        gsap.to(bg, {
-          scaleY: 1,
-          duration: 0.45,
-          ease: "power3.inOut",
-        });
-
-        gsap.to(content, {
-          color: text,
-          duration: 0.3,
-          delay: 0.1,
-          ease: "power2.out",
-        });
-      };
-
-      const handleMouseLeave = () => {
-        gsap.to(btn, {
-          scale: 1,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-
-        gsap.to(bg, {
-          scaleY: 0,
-          duration: 0.45,
-          ease: "power3.inOut",
-        });
-
-        gsap.to(content, {
-          color: originalColor,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      };
-
-      btn.addEventListener("mouseenter", handleMouseEnter);
-      btn.addEventListener("mouseleave", handleMouseLeave);
-
-      return () => {
-        btn.removeEventListener("mouseenter", handleMouseEnter);
-        btn.removeEventListener("mouseleave", handleMouseLeave);
-      };
-    },
-    { scope: containerRef, dependencies: [isDisabled, variant] }
-  );
 
   const sizes = {
     sm: "px-5 py-2 text-sm",
@@ -146,25 +80,29 @@ export function Button({
   const disabledStyles = "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed shadow-none";
 
   const baseClasses = cn(
-    "relative inline-flex items-center justify-center rounded-full font-medium overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
+    "group relative inline-flex items-center justify-center overflow-hidden rounded-full font-medium transition-transform duration-300 hover:scale-[1.02] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
     sizes[size],
     isDisabled ? disabledStyles : variants[variant][tone],
     className
   );
 
-  const { bg: hoverBgColor } = HOVER_MAP[variant] || HOVER_MAP.primary;
-
   const innerContent = (
     <>
       {!isDisabled && (
         <div
-          ref={bgRef}
-          className="absolute inset-0 w-full h-full origin-bottom"
-          style={{ backgroundColor: hoverBgColor, transform: "scaleY(0)" }}
+          className={cn(
+            "absolute inset-0 h-full w-full origin-bottom scale-y-0 transition-transform duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100",
+            hoverBgClasses[variant],
+          )}
         />
       )}
 
-      <div ref={contentRef} className="relative z-10 flex items-center justify-center gap-2 w-full">
+      <div
+        className={cn(
+          "relative z-10 flex w-full items-center justify-center gap-2 transition-colors duration-300",
+          !isDisabled && hoverTextClasses[variant],
+        )}
+      >
         {loading && disabled ? (
           <Loader2 className="animate-spin text-gray-400" size={size === "sm" ? 16 : 20} />
         ) : (
@@ -179,20 +117,29 @@ export function Button({
   );
 
   if (href && !isDisabled) {
+    const linkProps = props as Omit<
+      React.AnchorHTMLAttributes<HTMLAnchorElement>,
+      keyof ButtonBaseProps
+    >;
+
     return (
-      <Link href={href} ref={containerRef as any} className={baseClasses} {...(props as any)}>
+      <Link href={href} className={baseClasses} {...linkProps}>
         {innerContent}
       </Link>
     );
   }
 
+  const buttonProps = props as Omit<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    keyof ButtonBaseProps
+  >;
+
   return (
     <button
-      ref={containerRef as any}
       type="button"
       disabled={isDisabled}
       className={baseClasses}
-      {...(props as any)}
+      {...buttonProps}
     >
       {innerContent}
     </button>

@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { Outfit } from "next/font/google";
-import "./globals.css";
-import { LenisProvider } from "@/components/layouts/lenis-provider";
-import { Header } from "@/components/layouts/header";
 import { Footer } from "@/components/layouts/footer";
+import { Header } from "@/components/layouts/header";
+import { LenisProvider } from "@/components/layouts/lenis-provider";
+import { StackScene } from "@/components/layouts/stack-scene";
+import type { Metadata } from "next";
+import { Outfit } from "next/font/google";
+import localFont from "next/font/local";
+import "./globals.css";
 
 const roundKey = localFont({
   src: [
@@ -59,12 +60,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${roundKey.variable} ${outfit.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans text-secondary-900 bg-white">
+    <html
+      lang="en"
+      className={`${roundKey.variable} ${outfit.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col font-sans text-secondary-900 bg-secondary-950">
         <LenisProvider>
           <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <StackScene>
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </StackScene>
         </LenisProvider>
       </body>
     </html>

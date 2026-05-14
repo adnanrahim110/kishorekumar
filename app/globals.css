@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-
   --color-primary: #d04e4c;
   --color-primary-50: #fcf4f4;
   --color-primary-100: #fae6e6;
@@ -30,133 +29,14 @@
 
   --font-heading: var(--font-round-key);
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-
-  --animate-marquee: marquee 60s linear infinite;
-  --animate-marquee-reverse: marquee-reverse 60s linear infinite;
-
-  @keyframes marquee {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(-50%); }
-  }
-
-  @keyframes marquee-reverse {
-    0% { transform: translateX(-50%); }
-    100% { transform: translateX(0%); }
-  }
 }
 
 @layer base {
-
   :is(h1, h2, h3, h4, h5, h6) {
     @apply font-heading font-bold;
   }
 
   button {
     @apply cursor-pointer outline-none focus:outline-none;
-  }
-}
-
-@layer components {
-  .stacked-page {
-    background:
-      radial-gradient(circle at 50% 0%, rgba(208, 78, 76, 0.16), transparent 34rem),
-      var(--color-secondary-950);
-  }
-
-  .stacked-page > section {
-    --stack-card-shadow: 0 -28px 80px rgba(0, 0, 0, 0.34);
-    --stack-blur: 0px;
-    --stack-brightness: 1;
-    --stack-dim-bottom: 0;
-    --stack-dim-mid: 0;
-    --stack-dim-top: 0;
-    --stack-edge-bottom: 0.22;
-    --stack-edge-top: 0.11;
-    --stack-recede: 0;
-    --stack-rim-light: 0;
-    --stack-saturate: 1;
-    --stack-shadow-depth: 0;
-    --stack-texture-opacity: 0.2;
-    position: relative;
-    isolation: isolate;
-    backface-visibility: hidden;
-    box-shadow: var(--stack-card-shadow);
-    filter:
-      brightness(var(--stack-brightness))
-      saturate(var(--stack-saturate))
-      blur(var(--stack-blur));
-  }
-
-  .stacked-page > section::before,
-  .stacked-page > section::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    border-radius: inherit;
-  }
-
-  .stacked-page > section::before {
-    z-index: 1;
-    opacity: var(--stack-texture-opacity);
-    background-image:
-      linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 12px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.12), transparent 7rem),
-      radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.1), transparent 28rem),
-      radial-gradient(circle at 82% 12%, rgba(208, 78, 76, 0.11), transparent 24rem);
-  }
-
-  .stacked-page > section::after {
-    z-index: 2;
-    background:
-      linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, var(--stack-dim-top)),
-        rgba(0, 0, 0, var(--stack-dim-mid)) 42%,
-        rgba(0, 0, 0, var(--stack-dim-bottom))
-      );
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, var(--stack-edge-top)),
-      inset 0 -1px 0 rgba(0, 0, 0, var(--stack-edge-bottom)),
-      0 -12px 34px rgba(255, 255, 255, var(--stack-rim-light)),
-      0 -42px 90px rgba(0, 0, 0, var(--stack-shadow-depth));
-  }
-
-  .stacked-page > section:first-of-type {
-    --stack-card-shadow: none;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .stacked-page > section {
-      filter: none !important;
-      transform: none !important;
-    }
-  }
-}
-
-@layer utilities {
-  @keyframes headerSlide {
-    from { transform: translateY(-100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-
-  @keyframes fadeInDown {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-
-  @keyframes fadeInUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  @keyframes scrollPulse {
-    0%, 100% { transform: translateY(-100%); opacity: 0; }
-    50% { transform: translateY(100%); opacity: 1; }
   }
 }

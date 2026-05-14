@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { premiumEase } from "@/utils/animations";
 import { cn } from "@/utils/cn";
 import { LayoutGroup, motion } from "motion/react";
 import Image from "next/image";
@@ -10,12 +11,10 @@ import { useEffect, useState } from "react";
 
 const navLinks = [
   { label: "Home", href: "/", count: "01" },
-  { label: "Book", href: "/about-book", count: "02" },
+  { label: "Book", href: "/book", count: "02" },
   { label: "Author", href: "/about-author", count: "03" },
   { label: "Contact", href: "/contact", count: "04" },
 ];
-
-const premiumEase = [0.22, 1, 0.36, 1] as const;
 
 const layoutTransition = {
   layout: {
@@ -49,7 +48,7 @@ export function Header() {
           onHoverEnd={() => setLogoOpen(false)}
           onFocus={() => setLogoOpen(true)}
           onBlur={() => setLogoOpen(false)}
-          className="pointer-events-auto fixed left-3 top-3 isolate overflow-hidden rounded-xl border border-white/12 bg-secondary-950/82 p-1.5 text-white shadow-[0_22px_70px_rgba(0,0,0,0.42)] backdrop-blur-2xl sm:left-5 sm:top-5 lg:left-8 lg:top-8"
+          className="pointer-events-auto fixed left-3 top-3 isolate overflow-hidden rounded-xl border border-secondary-950/85 bg-secondary-950/82 text-white shadow-[0_22px_70px_rgba(0,0,0,0.42)] backdrop-blur-2xl sm:left-5 sm:top-5 lg:left-8 lg:top-8"
         >
           <span className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.06),transparent_48%,rgba(76,136,171,0.16))]" />
 
@@ -61,7 +60,7 @@ export function Header() {
             <motion.span
               layout
               transition={layoutTransition}
-              className="relative grid h-10 shrink-0 place-items-center overflow-hidden rounded-lg bg-primary-500 px-2.5 shadow-[0_0_40px_rgba(208,78,76,0.42)]"
+              className="relative grid h-11.5 shrink-0 place-items-center overflow-hidden rounded-l-lg bg-primary-500 px-2.5 shadow-[0_0_40px_rgba(208,78,76,0.42)]"
             >
               <span className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.3),transparent_56%)]" />
               <motion.span
@@ -71,11 +70,11 @@ export function Header() {
               >
                 <Image
                   src="/imgs/icon.png"
-                  alt=""
+                  alt="Kishore Kumar Icon"
                   width={720}
                   height={720}
                   priority
-                  className="h-8 w-auto object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.24)]"
+                  className="h-9 w-auto object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.24)]"
                 />
               </motion.span>
             </motion.span>
@@ -88,7 +87,7 @@ export function Header() {
                 opacity: logoExpanded ? 1 : 0,
                 filter: logoExpanded ? "blur(0px)" : "blur(4px)",
               }}
-              className="relative flex h-10 min-w-0 items-center overflow-hidden"
+              className="relative flex h-11 min-w-0 items-center overflow-hidden"
             >
               <motion.span
                 layout
@@ -98,7 +97,7 @@ export function Header() {
                   paddingLeft: logoExpanded ? 16 : 0,
                   paddingRight: logoExpanded ? 16 : 0,
                 }}
-                className="relative flex h-10 shrink-0 items-start"
+                className="relative flex h-11 shrink-0 items-center"
               >
                 <span className="block whitespace-nowrap font-heading text-[1.35rem] font-black leading-none tracking-wide uppercase text-white drop-shadow-[0_8px_16px_rgba(0,0,0,0.22)] sm:text-[2.2rem]">
                   Kishore Kumar
@@ -119,61 +118,88 @@ export function Header() {
       </LayoutGroup>
 
       <LayoutGroup id="header-navigation">
-        <motion.nav
+        <motion.div
           layout
           transition={layoutTransition}
-          className="pointer-events-auto fixed right-3 top-3 isolate overflow-hidden border border-white/10 bg-secondary-950/78 p-1.5 text-white shadow-[0_18px_58px_rgba(0,0,0,0.36)] backdrop-blur-2xl sm:right-5 sm:top-5 lg:right-8 lg:top-8 rounded-xl"
-          aria-label="Primary navigation"
+          className="pointer-events-none fixed right-3 top-3 sm:right-5 sm:top-5 lg:right-8 lg:top-8"
         >
-          <span className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.07),transparent_42%,rgba(208,78,76,0.13))]" />
-
-          <motion.div
+          <motion.span
+            aria-hidden="true"
+            animate={{ opacity: scrolled ? 1 : 0 }}
+            transition={{ duration: 0.42, ease: premiumEase }}
+            className="pointer-events-none absolute -inset-16 bg-black/5 backdrop-blur-2xl"
+            style={{
+              WebkitMaskImage:
+                "radial-gradient(ellipse closest-side at center, rgba(0,0,0,1) 25%, transparent 100%)",
+              maskImage:
+                "radial-gradient(ellipse closest-side at center, rgba(0,0,0,1) 25%, transparent 100%)",
+              WebkitMaskRepeat: "no-repeat",
+              maskRepeat: "no-repeat",
+            }}
+          />
+          <motion.nav
             layout
             transition={layoutTransition}
             className={cn(
-              "relative z-10 flex",
-              scrolled ? "flex-col items-stretch gap-0" : "items-center gap-2",
+              "pointer-events-auto relative isolate border border-white/10 bg-secondary-950/78 p-1.5 text-white backdrop-blur-2xl rounded-xl",
+              scrolled
+                ? "shadow-[0_0_40px_25px] shadow-black/30"
+                : "shadow-[0_18px_58px_rgba(0,0,0,0.36)]",
             )}
+            aria-label="Primary navigation"
           >
-            {navLinks.map((item) => (
+            <span className="absolute inset-0 rounded-xl bg-[linear-gradient(120deg,rgba(255,255,255,0.07),transparent_42%,rgba(208,78,76,0.13))]" />
+
+            <motion.div
+              layout
+              transition={layoutTransition}
+              className={cn(
+                "relative z-10 flex",
+                scrolled
+                  ? "flex-col items-stretch gap-0"
+                  : "items-center gap-2",
+              )}
+            >
+              {navLinks.map((item) => (
+                <motion.div
+                  key={item.href}
+                  layout="position"
+                  transition={layoutTransition}
+                  className="shrink-0"
+                >
+                  <HeaderNavLink
+                    href={item.href}
+                    label={item.label}
+                    count={item.count}
+                    isActive={pathname === item.href}
+                    layout={scrolled ? "column" : "row"}
+                  />
+                </motion.div>
+              ))}
+
               <motion.div
-                key={item.href}
                 layout="position"
                 transition={layoutTransition}
                 className="shrink-0"
               >
-                <HeaderNavLink
-                  href={item.href}
-                  label={item.label}
-                  count={item.count}
-                  isActive={pathname === item.href}
-                  layout={scrolled ? "column" : "row"}
-                />
+                <Button
+                  href="/shop"
+                  variant="primary"
+                  tone="solid"
+                  size="sm"
+                  icon={<AmazonIcon />}
+                  iconPosition="right"
+                  className={cn(
+                    "h-10 rounded-lg border-primary-500 bg-primary-500 px-4 py-3 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-none",
+                    scrolled && "w-full mt-2",
+                  )}
+                >
+                  Buy Book
+                </Button>
               </motion.div>
-            ))}
-
-            <motion.div
-              layout="position"
-              transition={layoutTransition}
-              className="shrink-0"
-            >
-              <Button
-                href="/shop"
-                variant="primary"
-                tone="solid"
-                size="sm"
-                icon={<AmazonIcon />}
-                iconPosition="right"
-                className={cn(
-                  "h-10 rounded-lg border-primary-500 bg-primary-500 px-4 py-3 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-none",
-                  scrolled && "w-full mt-2",
-                )}
-              >
-                Buy Book
-              </Button>
             </motion.div>
-          </motion.div>
-        </motion.nav>
+          </motion.nav>
+        </motion.div>
       </LayoutGroup>
     </header>
   );
